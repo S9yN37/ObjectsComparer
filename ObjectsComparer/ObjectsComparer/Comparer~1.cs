@@ -59,7 +59,6 @@ namespace ObjectsComparer
 
         internal IEnumerable<Difference> CalculateDifferences(T obj1, T obj2, MemberInfo memberInfo)
         {
-            var group = typeof(T).GetGroupName(Settings);
 
             var comparer = memberInfo != null
                 ? OverridesCollection.GetComparer(memberInfo)
@@ -71,7 +70,7 @@ namespace ObjectsComparer
                 comparer = comparer ?? DefaultValueComparer;
                 if (!comparer.Compare(obj1, obj2, Settings))
                 {
-                    yield return new Difference(group, string.Empty, comparer.ToString(obj1), comparer.ToString(obj2));
+                    yield return new Difference(string.Empty, comparer.ToString(obj1), comparer.ToString(obj2));
                 }
 
                 yield break;
@@ -95,7 +94,7 @@ namespace ObjectsComparer
             {
                 if (!DefaultValueComparer.Compare(obj1, obj2, Settings))
                 {
-                    yield return new Difference(group, string.Empty, DefaultValueComparer.ToString(obj1), DefaultValueComparer.ToString(obj2));
+                    yield return new Difference(string.Empty, DefaultValueComparer.ToString(obj1), DefaultValueComparer.ToString(obj2));
                 }
 
                 yield break;
@@ -111,7 +110,10 @@ namespace ObjectsComparer
                 var value1 = member.GetMemberValue(obj1);
                 var value2 = member.GetMemberValue(obj2);
                 var type = member.GetMemberType();
-                var name = member.GetCustomAttribute(Settings.MemberCustomNameAttribute)?.ToString() ?? member.Name;
+
+                IMemberNameAndGroup mg = (IMemberNameAndGroup)member.GetCustomAttribute(Settings.MemberNameAndGroupAttribute);
+                var name = mg?.Name ?? member.Name;
+                var group = mg?.Group ?? string.Empty;
 
                 if (conditionalComparer != null && conditionalComparer.SkipMember(typeof(T), member))
                 {
@@ -146,7 +148,7 @@ namespace ObjectsComparer
 
                 if (!valueComparer.Compare(value1, value2, Settings))
                 {
-                    yield return new Difference(group, name, valueComparer.ToString(value1), valueComparer.ToString(value2));
+                    yield return new Difference(name, valueComparer.ToString(value1), valueComparer.ToString(value2)) { Group = group };
                 }
             }
         }

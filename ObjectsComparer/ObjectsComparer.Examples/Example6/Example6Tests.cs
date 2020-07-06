@@ -23,6 +23,32 @@ namespace ObjectsComparer.Examples.Example7
                 Name = "N1",
                 Items = new List<ElementItem>() {
                     new ElementItem() { ElementId = 101, Description = "D10", Price = new ElementPrice() { Value = 1.1m } },
+                }
+            };
+
+            var e2 = new Element
+            {
+                Name = "N1",
+                Items = new List<ElementItem>() {
+                     new ElementItem() { ElementId = 102, Description = "D11", Price = new ElementPrice() { Value = 1.2m } },
+                }
+            };
+
+            var isEqual = _comparer.Compare(e1, e2, out var differences);
+
+            ResultToOutput(isEqual, differences);
+
+            Assert.IsFalse(isEqual);
+        }
+    }
+}
+
+/*
+            var e1 = new Element
+            {
+                Name = "N1",
+                Items = new List<ElementItem>() {
+                    new ElementItem() { ElementId = 101, Description = "D10", Price = new ElementPrice() { Value = 1.1m } },
                     new ElementItem() { ElementId = 102, Description = "D20", Price = new ElementPrice() { Value = 2.2m } }
                 }
             };
@@ -37,11 +63,4 @@ namespace ObjectsComparer.Examples.Example7
                 }
             };
 
-            var isEqual = _comparer.Compare(e1, e2, out var differences);
-
-            ResultToOutput(isEqual, differences);
-
-            Assert.IsFalse(isEqual);
-        }
-    }
-}
+*/

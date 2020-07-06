@@ -8,7 +8,7 @@ namespace ObjectsComparer.Tests
         [Test]
         public void DifferenceToString()
         {
-            var difference = new Difference("Group1", "Property1", "12345", "12346");
+            var difference = new Difference("Property1", "12345", "12346") {  Group = "Group1" };
 
             var toString = difference.ToString();
 

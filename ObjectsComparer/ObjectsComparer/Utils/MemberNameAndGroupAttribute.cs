@@ -5,18 +5,15 @@ using System.Text;
 namespace ObjectsComparer.Utils
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class MemberCustomNameAttribute : Attribute
+    public class MemberNameAndGroupAttribute : Attribute, IMemberNameAndGroup
     {
+        public string Group { get; set; }
         public string Name { get; set; }
 
-        public MemberCustomNameAttribute(string name)
+        public MemberNameAndGroupAttribute(string group, string name)
         {
+            Group = group;
             Name = name;
-        }
-
-        public override string ToString()
-        {
-            return Name.ToString();
         }
     }
 }

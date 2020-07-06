@@ -11,7 +11,6 @@ namespace ObjectsComparer.Examples.Example4
 
         public override IEnumerable<Difference> CalculateDifferences(IList<FormulaItem> obj1, IList<FormulaItem> obj2)
         {
-            var group = string.Empty;
             if (obj1 == null && obj2 == null)
             {
                 yield break;
@@ -19,13 +18,13 @@ namespace ObjectsComparer.Examples.Example4
 
             if (obj1 == null || obj2 == null)
             {
-                yield return new Difference(group, "", DefaultValueComparer.ToString(obj1), DefaultValueComparer.ToString(obj2));
+                yield return new Difference("", DefaultValueComparer.ToString(obj1), DefaultValueComparer.ToString(obj2));
                 yield break;
             }
 
             if (obj1.Count != obj2.Count)
             {
-                yield return new Difference(group, "Count", obj1.Count.ToString(), obj2.Count.ToString(), DifferenceTypes.NumberOfElementsMismatch);
+                yield return new Difference("Count", obj1.Count.ToString(), obj2.Count.ToString(), DifferenceTypes.NumberOfElementsMismatch);
             }
 
             foreach (var formulaItem in obj1)

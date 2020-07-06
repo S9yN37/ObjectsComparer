@@ -14,8 +14,6 @@ namespace ObjectsComparer.CustomComparers
 
         public override IEnumerable<Difference> CalculateDifferences(Type type, object obj1, object obj2)
         {
-            var group = typeof(T).GetGroupName(Settings);
-
             if (!type.InheritsFrom(typeof(IEnumerable<>)))
             {
                 throw new ArgumentException("Invalid type");
@@ -56,13 +54,25 @@ namespace ObjectsComparer.CustomComparers
             var addedItems = list2.Where(e => !list1.Any(o1 => e.Object.Key == o1.Object.Key));
             foreach (var item in addedItems)
             {
-                yield return new Difference(group, $"[{item.Index + 1}]", string.Empty, "Added", DifferenceTypes.MissedElementInFirstObject);
+                var itemType = item.Object.GetType();
+                var comparer = Factory.GetObjectsComparer(itemType, Settings, this);
+                var empty = Activator.CreateInstance(itemType);
+                foreach (var failure in comparer.CalculateDifferences(itemType, empty, item.Object))
+                {
+                    yield return new Difference($"[{item.Index + 1}].{failure.MemberPath}", "Added", failure.Value2, DifferenceTypes.MissedElementInFirstObject);
+                }
             }
 
             var deletedItems = list1.Where(e => !list2.Any(o2 => e.Object.Key == o2.Object.Key));
             foreach (var item in deletedItems)
             {
-                yield return new Difference(group, $"[{item.Index + 1}]", "Deleted", string.Empty, DifferenceTypes.MissedMemberInSecondObject);
+                var itemType = item.Object.GetType();
+                var comparer = Factory.GetObjectsComparer(itemType, Settings, this);
+                var empty = Activator.CreateInstance(itemType);
+                foreach (var failure in comparer.CalculateDifferences(itemType, item.Object, empty))
+                {
+                    yield return new Difference($"[{item.Index + 1}].{failure.MemberPath}", failure.Value1, "Deleted", DifferenceTypes.MissedMemberInSecondObject);
+                }
             }
         }
     }

@@ -34,10 +34,9 @@
         /// <param name="value1">Value of the first object, converted to string.</param>
         /// <param name="value2">Value of the second object, converted to string.</param>
         /// <param name="differenceType">Type of the difference.</param>
-        public Difference(string group, string memberPath, string value1, string value2,
+        public Difference(string memberPath, string value1, string value2,
             DifferenceTypes differenceType = DifferenceTypes.ValueMismatch)
         {
-            Group = group;
             MemberPath = memberPath;
             Value1 = value1;
             Value2 = value2;
@@ -56,11 +55,13 @@
                 : path + "." + MemberPath;
 
             return new Difference(
-                Group,
                 newPath,
                 Value1,
                 Value2,
-                DifferenceType);
+                DifferenceType)
+            {
+                Group = Group
+            };
         }
 
         /// <summary>Returns a string that represents the current object.</summary>

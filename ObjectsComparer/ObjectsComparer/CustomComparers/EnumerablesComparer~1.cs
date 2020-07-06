@@ -18,8 +18,6 @@ namespace ObjectsComparer
 
         public override IEnumerable<Difference> CalculateDifferences(Type type, object obj1, object obj2)
         {
-            var group = typeof(T).GetGroupName(Settings);
-
             if (!type.InheritsFrom(typeof(IEnumerable<>)))
             {
                 throw new ArgumentException("Invalid type");
@@ -51,7 +49,7 @@ namespace ObjectsComparer
             {
                 if (!type.GetTypeInfo().IsArray)
                 {
-                    yield return new Difference(group, "", list1.Count.ToString(), list2.Count.ToString(), DifferenceTypes.NumberOfElementsMismatch);
+                    yield return new Difference("", list1.Count.ToString(), list2.Count.ToString(), DifferenceTypes.NumberOfElementsMismatch);
                 }
 
                 yield break;

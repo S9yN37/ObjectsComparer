@@ -14,8 +14,6 @@ namespace ObjectsComparer
 
         public override IEnumerable<Difference> CalculateDifferences(Type type, object obj1, object obj2)
         {
-            var group = type.GetGroupName(Settings);
-
             var castedObject1 = (T)obj1;
             var castedObject2 = (T)obj2;
             var propertyKeys1 = GetProperties(castedObject1);
@@ -61,13 +59,13 @@ namespace ObjectsComparer
                 {
                     if (!existsInObject1)
                     {
-                        yield return new Difference(group, propertyKey, string.Empty, valueComparer.ToString(value2), DifferenceTypes.MissedMemberInFirstObject);
+                        yield return new Difference(propertyKey, string.Empty, valueComparer.ToString(value2), DifferenceTypes.MissedMemberInFirstObject);
                         continue;
                     }
 
                     if (!existsInObject2)
                     {
-                        yield return new Difference(group, propertyKey, valueComparer.ToString(value1), string.Empty, DifferenceTypes.MissedMemberInSecondObject);
+                        yield return new Difference(propertyKey, valueComparer.ToString(value1), string.Empty, DifferenceTypes.MissedMemberInSecondObject);
                         continue;
                     }
                 }
@@ -77,7 +75,7 @@ namespace ObjectsComparer
                     var valueComparer2 = OverridesCollection.GetComparer(value2.GetType()) ??
                         OverridesCollection.GetComparer(propertyKey) ??
                         DefaultValueComparer;
-                    yield return new Difference(group, propertyKey, valueComparer.ToString(value1), valueComparer2.ToString(value2), DifferenceTypes.TypeMismatch);
+                    yield return new Difference(propertyKey, valueComparer.ToString(value1), valueComparer2.ToString(value2), DifferenceTypes.TypeMismatch);
                     continue;
                 }
 
@@ -88,7 +86,7 @@ namespace ObjectsComparer
                     var valueComparer2 = value2 != null ?
                         OverridesCollection.GetComparer(value2.GetType()) ?? OverridesCollection.GetComparer(propertyKey) ?? DefaultValueComparer :
                         DefaultValueComparer;
-                    yield return new Difference(group, propertyKey, valueComparer.ToString(value1), valueComparer2.ToString(value2), DifferenceTypes.TypeMismatch);
+                    yield return new Difference(propertyKey, valueComparer.ToString(value1), valueComparer2.ToString(value2), DifferenceTypes.TypeMismatch);
                     continue;
                 }
 
@@ -96,7 +94,7 @@ namespace ObjectsComparer
                 {
                     if (!customComparer.Compare(value1, value2, Settings))
                     {
-                        yield return new Difference(group, propertyKey, customComparer.ToString(value1), customComparer.ToString(value2));
+                        yield return new Difference(propertyKey, customComparer.ToString(value1), customComparer.ToString(value2));
                     }
 
                     continue;

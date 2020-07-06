@@ -28,14 +28,9 @@ namespace ObjectsComparer
         public bool UseDefaultIfMemberNotExist { get; set; }
 
         /// <summary>
-        /// Attribute type used to specify groups of differences.
+        /// Attribute type used to define custom group and name for members
         /// </summary>
-        public Type GroupNameAttribute { get; set; }
-
-        /// <summary>
-        /// Attribute type used to define custom names for members
-        /// </summary>
-        public Type MemberCustomNameAttribute { get; set; }
+        public Type MemberNameAndGroupAttribute { get; set; }
 
         private readonly Dictionary<Tuple<Type, string>, object> _settings = new Dictionary<Tuple<Type, string>, object>();
 
@@ -47,8 +42,7 @@ namespace ObjectsComparer
             RecursiveComparison = true;
             EmptyAndNullEnumerablesEqual = false;
             UseDefaultIfMemberNotExist = false;
-            GroupNameAttribute = typeof(GroupNameAttribute);
-            MemberCustomNameAttribute = typeof(MemberCustomNameAttribute);
+            MemberNameAndGroupAttribute = typeof(MemberNameAndGroupAttribute);
         }
 
         /// <summary>
